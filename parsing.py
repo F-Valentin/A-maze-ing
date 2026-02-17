@@ -1,7 +1,9 @@
 from typing import Any
 
 
-def is_valid_grid(width, height, config_data) -> bool:
+def is_valid_grid(
+    width: int | None, height: int | None, config_data: dict[str, Any]
+) -> bool:
     if width is None or height is None:
         print("Error: WIDTH and HEIGHT must be defined in config.txt")
         return False
@@ -10,8 +12,12 @@ def is_valid_grid(width, height, config_data) -> bool:
         print("Error: height or width must be greater than 1")
         return False
 
+    if width < 7 or height < 5:
+        print("Error: heigh or width must be greater than (height >= 5, width >= 7).")
+        return False
+
     for key in ["entry", "exit"]:
-        if key in config_data and width and height:
+        if key in config_data:
             x, y = config_data[key]
             if not (0 <= x < width and 0 <= y < height):
                 print(f"Error: {key.upper()} {x, y} is out of maze boundaries.")
@@ -19,7 +25,7 @@ def is_valid_grid(width, height, config_data) -> bool:
     return True
 
 
-def assign_key_value(key, value, config_data) -> bool:
+def assign_key_value(key: str, value: str, config_data: dict[str, Any]) -> bool:
     try:
         match key:
             case "WIDTH":
@@ -52,7 +58,7 @@ def assign_key_value(key, value, config_data) -> bool:
     return True
 
 
-def is_all_keys_required(config_data) -> bool:
+def is_all_keys_required(config_data: dict[str, Any]) -> bool:
     required_keys = ["width", "height", "entry", "exit", "perfect", "output_file"]
     for req in required_keys:
         if req not in config_data:
@@ -67,7 +73,7 @@ def parsing_config_data(file_name: str) -> dict[str, Any] | None:
         print("Invalid filename. Expected 'config.txt'.")
         return None
 
-    config_data = {}
+    config_data: dict[str, Any] = {}
     try:
         with open(file_name, "r") as f:
             lines = f.readlines()

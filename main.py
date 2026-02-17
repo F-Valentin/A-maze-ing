@@ -3,7 +3,7 @@ import sys
 import parsing
 
 
-def main():
+def main() -> None:
     if len(sys.argv) != 2:
         print("We want only one argument (argument: config.txt)")
         sys.exit(-1)
