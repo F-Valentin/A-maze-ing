@@ -20,12 +20,17 @@ def is_valid_grid(
             x, y = config_data[key]
             print((x, y))
             if not (0 <= x < width and 0 <= y < height):
-                print(f"Error: {key.upper()} {x, y} is out of maze boundaries.")
+                print(
+                    f"Error: {
+                        key.upper()} {
+                        x,
+                        y} is out of maze boundaries.")
                 return False
     return True
 
 
-def assign_key_value(key: str, value: str, config_data: dict[str, Any]) -> bool:
+def assign_key_value(key: str, value: str,
+                     config_data: dict[str, Any]) -> bool:
     try:
         match key:
             case "WIDTH":
@@ -35,7 +40,10 @@ def assign_key_value(key: str, value: str, config_data: dict[str, Any]) -> bool:
             case "ENTRY" | "EXIT":
                 parts = value.split(",")
                 if len(parts) != 2:
-                    print(f"Error: {key} must contain exactly two coordinates (x,y).")
+                    print(
+                        f"Error: {key} "
+                        "must contain exactly two coordinates (x,y)."
+                    )
                     return False
                 coords = tuple(int(n) for n in parts)
                 config_data[key.lower()] = coords
@@ -59,7 +67,13 @@ def assign_key_value(key: str, value: str, config_data: dict[str, Any]) -> bool:
 
 
 def is_all_keys_required(config_data: dict[str, Any]) -> bool:
-    required_keys = ["width", "height", "entry", "exit", "perfect", "output_file"]
+    required_keys = [
+        "width",
+        "height",
+        "entry",
+        "exit",
+        "perfect",
+        "output_file"]
     for req in required_keys:
         if req not in config_data:
             print(f"Error: Missing required configuration key: {req.upper()}")
@@ -92,7 +106,10 @@ def parsing_config_data(file_name: str) -> dict[str, Any] | None:
                     return None
 
     except FileNotFoundError:
-        print(f"Error: The file '{file_name}' was not found in the current directory.")
+        print(
+            f"Error: The file '{file_name}' "
+            "was not found in the current directory."
+        )
         return None
     except PermissionError:
         print(f"Error: You do not have permission to read '{file_name}'.")

@@ -1,4 +1,5 @@
 import sys
+
 import parsing
 from maze import Maze
 
@@ -12,6 +13,10 @@ def main() -> None:
     if not result:
         return
     maze = Maze(result)
+    cell = maze.get_random_valid_cell(0, 0)
+    if cell is None:
+        return
+    print((cell.x, cell.y))
 
 
 if __name__ == "__main__":

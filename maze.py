@@ -1,4 +1,5 @@
 import random
+
 from cellule import Cellule
 
 
@@ -22,29 +23,31 @@ class Maze:
 
         cell = self.maze[x][y]
 
-        if len(cell.cells_coords) == 0:
+        if len(cell.neighbors) == 0:
             return None
 
         # the coordinates of the cells around the current cell.
-        random.shuffle(cell.cells_coords)  # shuffle cell_coords to randomize the array
+        # shuffle cell_coords to randomize the array
+        random.shuffle(cell.neighbors)
 
         # get a cell
         for _ in range(0, 4):
-            x = cell.cells_coords[0][0]
-            y = cell.cells_coords[0][1]
-            if not (0 <= x < width and 0 <= y < height):  # if out of range, we remove the current cell
-                cell.cells_coords.remove((cell.cells_coords[0][0], cell.cells_coords[0][1]))
-            elif self.maze[x][y].has_visited is True:  # if the cell has already been visited, we remove the cell
-                cell.cells_coords.remove((cell.cells_coords[0][0], cell.cells_coords[0][1]))
+            x = cell.neighbors[0][0]  # get x coordinate
+            y = cell.neighbors[0][1]  # get y coordinate
+            if not (
+                0 <= x < width and 0 <= y < height
+            ):  # if out of range, we remove the current cell
+                cell.neighbors.remove((x, y))
+            elif (
+                self.maze[x][y].has_visited is True
+            ):  # if the cell has already been visited, we remove the cell
+                cell.neighbors.remove((x, y))
             else:
                 break
 
         # if there are no cells available then we return None
-        if (len(cell.cells_coords) == 0):
+        if len(cell.neighbors) == 0:
             return None
-
-        x = cell.cells_coords[0][0]  # get x coordinate
-        y = cell.cells_coords[0][1]  # get y coordinate
 
         cell = self.maze[x][y]  # get the cell
         cell.has_visited = True  # set the cell has visited
@@ -65,7 +68,7 @@ class Maze:
             for row in range(0, width):
                 for col in range(0, height):
                     cell = self.maze[row][col]
-                    f.write(str(hex(cell.walls).lstrip('0x').upper()))
+                    f.write(str(hex(cell.walls).lstrip("0x").upper()))
                 f.write("\n")
 
     def perfect_maze(self):
