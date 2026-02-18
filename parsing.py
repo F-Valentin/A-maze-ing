@@ -14,11 +14,11 @@ def is_valid_grid(
 
     if width < 7 or height < 5:
         print("Error: The maze size does not allow the 42 pattern")
-        return True
 
     for key in ["entry", "exit"]:
         if key in config_data:
             x, y = config_data[key]
+            print((x, y))
             if not (0 <= x < width and 0 <= y < height):
                 print(f"Error: {key.upper()} {x, y} is out of maze boundaries.")
                 return False

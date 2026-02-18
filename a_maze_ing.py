@@ -13,6 +13,7 @@ def main() -> None:
         return
     maze = Maze(result)
     print(maze.print_hexa_walls())
+    maze.perfect_maze()
 
 
 if __name__ == "__main__":
