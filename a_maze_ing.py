@@ -12,7 +12,7 @@ def main() -> None:
     if not result:
         return
     maze = Maze(result)
-    print(maze.get_random_valid_cell(1, 1).has_visited)
+    print(maze.print_hexa_walls())
 
 
 if __name__ == "__main__":

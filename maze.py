@@ -56,7 +56,12 @@ class Maze:
         output_file = self.config_data["output_file"]
 
         with open(output_file, "w") as f:
-            for
+            for row in range(0, width):
+                for col in range(0, height):
+                    cell = self.maze[row][col]
+                    f.write(str(hex(cell.walls).lstrip('0x').upper()))
+                f.write("\n")
+
     def perfect_maze(self):
         pass
 
