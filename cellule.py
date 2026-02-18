@@ -1,0 +1,9 @@
+class Cellule:
+    def __init__(self, x: int, y: int, walls: int, has_visited: bool):
+        self.x = x
+        self.y = y
+        self.walls = walls
+        self.has_visited = False
+
+    def get_random_valid_neightbor(self) -> Cellule:
+        pass
