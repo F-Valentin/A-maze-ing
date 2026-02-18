@@ -1,9 +1,7 @@
 import sys
-
 import parsing
-
-
 from maze import Maze
+
 
 def main() -> None:
     if len(sys.argv) != 2:
@@ -14,7 +12,8 @@ def main() -> None:
     if not result:
         return
     maze = Maze(result)
-    print(maze.maze)
+    print(maze.get_random_valid_cell(1, 1).has_visited)
+
 
 if __name__ == "__main__":
     main()

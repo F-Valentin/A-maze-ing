@@ -3,4 +3,4 @@ class Cellule:
         self.x = x
         self.y = y
         self.walls = walls
-        self.has_visited = False
+        self.has_visited = has_visited

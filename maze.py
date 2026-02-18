@@ -1,6 +1,7 @@
 import random
 from cellule import Cellule
 
+
 class Maze:
     from typing import Any
 
@@ -20,7 +21,12 @@ class Maze:
         random.shuffle(cell_coords)
 
         for _ in range(0, 4):
-            if not (0 <= cell_coords[0][0] < width and 0 <= cell_coords[0][1] < height):
+            x = cell_coords[0][0]
+            y = cell_coords[0][1]
+            if not (0 <= x < width and 0 <= y
+                    < height):
+                cell_coords.remove((cell_coords[0][0], cell_coords[0][1]))
+            elif self.maze[x][y].has_visited is True:
                 cell_coords.remove((cell_coords[0][0], cell_coords[0][1]))
             else:
                 break
@@ -32,6 +38,7 @@ class Maze:
         y = cell_coords[0][1]
 
         cell = self.maze[x][y]
+        cell.has_visited = True
         return cell
 
     def init_maze(self, width, height) -> None:
