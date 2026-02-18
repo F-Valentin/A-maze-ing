@@ -12,8 +12,6 @@ def main() -> None:
     if not result:
         return
     maze = Maze(result)
-    print(maze.print_hexa_walls())
-    maze.perfect_maze()
 
 
 if __name__ == "__main__":
