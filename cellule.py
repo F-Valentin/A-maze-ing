@@ -4,6 +4,3 @@ class Cellule:
         self.y = y
         self.walls = walls
         self.has_visited = False
-
-    def get_random_valid_neightbor(self) -> Cellule:
-        pass
