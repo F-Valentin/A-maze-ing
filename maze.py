@@ -9,8 +9,8 @@ class Maze:
         self.width = self.config_data["width"]
         self.height = self.config_data["height"]
 
-        self.maze = [self.width][self.height]
-        Maze.init_maze(self.maze, self.width, self.height)
+        self.maze = []
+        self.init_maze(self.width, self.height)
 
     def get_random_valid_cell(self, x: int, y: int) -> Cellule | None:
         width = self.width
@@ -31,13 +31,14 @@ class Maze:
         x = cell_coords[0][0]
         y = cell_coords[0][1]
 
-        return self.maze[x][y]
+        cell = self.maze[x][y]
+        return cell
 
-    @staticmethod
-    def init_maze(maze, width, height) -> None:
+    def init_maze(self, width, height) -> None:
         for x in range(0, width):
+            self.maze.append([])
             for y in range(0, height):
-                maze[x][y] = Cellule(x, y, 0x0F, False)
+                self.maze[x].append(Cellule(x, y, 0x0F, False))
 
     def perfect_maze(self):
         pass
