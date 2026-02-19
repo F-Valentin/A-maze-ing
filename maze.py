@@ -4,6 +4,8 @@ from types import CellType
 from cellule import Cellule
 
 
+# fix y == row and x == col
+
 class Maze:
     from typing import Any
 
@@ -22,38 +24,39 @@ class Maze:
         if not (0 <= x < width and 0 <= y < height):
             return None
 
-        cell = self.maze[x][y]
+        print(f"current cell: {(x, y)}")
+        cell = self.maze[y][x]
+        print(f"neighbors cell: {cell.neighbors}")
 
-        if len(cell.neighbors) == 0:
+        valid_neighbors: list[tuple[int, int]] = list(
+            filter(
+                lambda coords: 0 <= coords[0] < width and 0 <= coords[1] < height and not self.maze[coords[1]][coords[0]].has_visited,
+                cell.neighbors
+            )
+        )
+
+
+        if len(valid_neighbors) == 0:
             return None
 
-        random.shuffle(cell.neighbors)
+        neighbor_coord = random.choice(valid_neighbors)
 
-        for _ in cell.neighbors:
-            x = cell.neighbors[0][0]
-            y = cell.neighbors[0][1]
-            if not (
-                0 <= x < width and 0 <= y < height
-            ):
-                cell.neighbors.remove((x, y))
-            else:
-                break
+        x = neighbor_coord[0]
+        y = neighbor_coord[1]
 
-        if len(cell.neighbors) == 0:
-            return None
+        next_cell = self.maze[y][x]
 
-        Maze.open_walls(cell, self.maze[x][y])
+        Maze.open_walls(cell, next_cell)
 
-        cell = self.maze[x][y]
-        cell.has_visited = True
+        next_cell.has_visited = True
 
-        return cell
+        return next_cell
 
     def init_maze(self, width, height) -> None:
-        for x in range(0, width):
+        for y in range(0, height):
             self.maze.append([])
-            for y in range(0, height):
-                self.maze[x].append(Cellule(x, y, 0x0F, False))
+            for x in range(0, width):
+                self.maze[y].append(Cellule(x, y, 0x0F, False))
 
     def print_hexa_walls(self):
         width = self.width
@@ -62,9 +65,20 @@ class Maze:
 
         with open(output_file, "w") as f:
             for row in range(0, height):
-                for col in range(0, row):
+                for col in range(0, width):
                     cell = self.maze[row][col]
-                    f.write(str(hex(cell.walls).lstrip("0x").upper()))
+                    f.write(str(hex(cell.walls)).lstrip("0x").upper())
+                f.write("\n")
+
+    def print_maze_coords(self):
+        width = self.width
+        height = self.height
+
+        with open("coords.txt", "w") as f:
+            for row in range(0, height):
+                for col in range(0, width):
+                    cell = self.maze[row][col]
+                    f.write(f"({cell.x},{cell.y}) ")
                 f.write("\n")
 
     @staticmethod
@@ -75,34 +89,34 @@ class Maze:
         west = 0b0000_1000
 
         if cell.x + 1 == cell1.x:
-            cell.walls ^= east
-            cell1.walls ^= west
+            cell.walls &= ~east
+            cell1.walls &= ~west
         elif cell.x - 1 == cell1.x:
-            cell.walls ^= west
-            cell1.walls ^= east
-        elif cell.y + 1 == cell1.y:
-            cell.walls ^= north
-            cell1.walls ^= south
+            cell.walls &= ~west
+            cell1.walls &= ~east
         elif cell.y - 1 == cell1.y:
-            cell.walls ^= south
-            cell1.walls ^= north
+            cell.walls &= ~north
+            cell1.walls &= ~south
+        elif cell.y + 1 == cell1.y:
+            cell.walls &= ~south
+            cell1.walls &= ~north
 
-        def perfect_maze(self):
-            x = self.config_data["entry"][0]
-            y = self.config_data["entry"][1]
-            curr_cell = self.maze[x][y]
-            curr_cell.has_visited = True
-            maze_path = [curr_cell]
-            while len(maze_path) > 0:
-                next_cell = self.get_random_valid_cell(
-                    curr_cell.x, curr_cell.y)
-                if next_cell:
-                    print((next_cell.x, next_cell.y))
-                if next_cell is None:
-                    curr_cell = maze_path.pop()
-                else:
-                    maze_path.append(next_cell)
-                    curr_cell = next_cell
+    def perfect_maze(self):
+        x = self.config_data["entry"][0]
+        y = self.config_data["entry"][1]
+        curr_cell = self.maze[y][x]
+        curr_cell.has_visited = True
+        maze_path = [curr_cell]
+        while len(maze_path) > 0:
+            next_cell = self.get_random_valid_cell(
+                curr_cell.x, curr_cell.y)
+            if next_cell:
+                print(f"next_cell: {(next_cell.x, next_cell.y)}")
+            if next_cell is None:
+                curr_cell = maze_path.pop()
+            else:
+                maze_path.append(next_cell)
+                curr_cell = next_cell
 
     def imperfect_maze(self):
         pass

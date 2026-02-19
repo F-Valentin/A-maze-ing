@@ -9,14 +9,12 @@ def main() -> None:
         print("We want only one argument (argument: config.txt)")
         sys.exit(-1)
     result = parsing.parsing_config_data(sys.argv[1])
-    print(result)
     if not result:
         return
     maze = Maze(result)
-    cell = maze.get_random_valid_cell(0, 0)
-    if cell is None:
-        return
+    maze.perfect_maze()
     maze.print_hexa_walls()
+
 
 if __name__ == "__main__":
     main()
