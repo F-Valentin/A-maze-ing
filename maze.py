@@ -61,8 +61,8 @@ class Maze:
         output_file = self.config_data["output_file"]
 
         with open(output_file, "w") as f:
-            for row in range(0, width):
-                for col in range(0, height):
+            for row in range(0, height):
+                for col in range(0, row):
                     cell = self.maze[row][col]
                     f.write(str(hex(cell.walls).lstrip("0x").upper()))
                 f.write("\n")
@@ -86,7 +86,6 @@ class Maze:
         elif cell.y - 1 == cell1.y:
             cell.walls ^= south
             cell1.walls ^= north
-
 
     def perfect_maze(self):
         x = self.config_data["entry"][0]
