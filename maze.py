@@ -16,9 +16,9 @@ class Maze:
         self.init_maze(self.width, self.height)
 
     def get_random_valid_cell(self, x: int, y: int) -> Cellule | None:
-
         width = self.width
         height = self.height
+
         if not (0 <= x < width and 0 <= y < height):
             return None
 
@@ -27,36 +27,26 @@ class Maze:
         if len(cell.neighbors) == 0:
             return None
 
-        # shuffle cell_coords to randomize the array
         random.shuffle(cell.neighbors)
 
         for _ in cell.neighbors:
-            x = cell.neighbors[0][0]  # get x coordinate
-            y = cell.neighbors[0][1]  # get y coordinate
+            x = cell.neighbors[0][0]
+            y = cell.neighbors[0][1]
             if not (
                 0 <= x < width and 0 <= y < height
-            ):  # if out of range, we remove the current cell
-                cell.neighbors.remove((x, y))
-            elif (
-                self.maze[x][y].has_visited is True
-            ):  # if the cell has already been visited, we remove the cell
+            ):
                 cell.neighbors.remove((x, y))
             else:
                 break
 
-        # if there are no cells available then we return None
         if len(cell.neighbors) == 0:
             return None
 
         Maze.open_walls(cell, self.maze[x][y])
 
+        cell = self.maze[x][y]
+        cell.has_visited = True
 
-        cell = self.maze[x][y]  # get the cell
-        print((cell.x, cell.y))
-
-        # open the current wall, and the old wall
-
-        cell.has_visited = True  # set the cell has visited
         return cell
 
     def init_maze(self, width, height) -> None:
