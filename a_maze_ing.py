@@ -16,8 +16,7 @@ def main() -> None:
     cell = maze.get_random_valid_cell(0, 0)
     if cell is None:
         return
-    print((cell.x, cell.y))
-
+    maze.print_hexa_walls()
 
 if __name__ == "__main__":
     main()

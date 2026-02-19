@@ -1,4 +1,5 @@
 import random
+from types import CellType
 
 from cellule import Cellule
 
@@ -26,12 +27,10 @@ class Maze:
         if len(cell.neighbors) == 0:
             return None
 
-        # the coordinates of the cells around the current cell.
         # shuffle cell_coords to randomize the array
         random.shuffle(cell.neighbors)
 
-        # get a cell
-        for _ in range(0, 4):
+        for _ in cell.neighbors:
             x = cell.neighbors[0][0]  # get x coordinate
             y = cell.neighbors[0][1]  # get y coordinate
             if not (
@@ -49,7 +48,14 @@ class Maze:
         if len(cell.neighbors) == 0:
             return None
 
+        Maze.open_walls(cell, self.maze[x][y])
+
+
         cell = self.maze[x][y]  # get the cell
+        print((cell.x, cell.y))
+
+        # open the current wall, and the old wall
+
         cell.has_visited = True  # set the cell has visited
         return cell
 
@@ -70,6 +76,27 @@ class Maze:
                     cell = self.maze[row][col]
                     f.write(str(hex(cell.walls).lstrip("0x").upper()))
                 f.write("\n")
+
+    @staticmethod
+    def open_walls(cell: Cellule, cell1: Cellule):
+        north = 0b0000_0001
+        south = 0b0000_0100
+        east = 0b0000_0010
+        west = 0b0000_1000
+
+        if cell.x + 1 == cell1.x:
+            cell.walls ^= east
+            cell1.walls ^= west
+        elif cell.x - 1 == cell1.x:
+            cell.walls ^= west
+            cell1.walls ^= east
+        elif cell.y + 1 == cell1.y:
+            cell.walls ^= north
+            cell1.walls ^= south
+        elif cell.y - 1 == cell1.y:
+            cell.walls ^= south
+            cell1.walls ^= north
+
 
     def perfect_maze(self):
         x = self.config_data["entry"][0]
