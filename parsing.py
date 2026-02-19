@@ -12,8 +12,11 @@ def is_valid_grid(
         print("Error: height or width must be greater than 1")
         return False
 
-    if width < 7 or height < 5:
+    if width < 8 or height < 6:
         print("Error: The maze size does not allow the 42 pattern")
+        config_data["42"] = False
+    else:
+        config_data["42"] = True
 
     for key in ["entry", "exit"]:
         if key in config_data:
