@@ -87,13 +87,22 @@ class Maze:
             cell.walls ^= south
             cell1.walls ^= north
 
-    def perfect_maze(self):
-        x = self.config_data["entry"][0]
-        y = self.config_data["entry"][1]
-        curr_cell = self.maze[x][y]
-        maze_path = [curr_cell]
-        while len(maze_path) > 0:
-            pass
+        def perfect_maze(self):
+            x = self.config_data["entry"][0]
+            y = self.config_data["entry"][1]
+            curr_cell = self.maze[x][y]
+            curr_cell.has_visited = True
+            maze_path = [curr_cell]
+            while len(maze_path) > 0:
+                next_cell = self.get_random_valid_cell(
+                    curr_cell.x, curr_cell.y)
+                if next_cell:
+                    print((next_cell.x, next_cell.y))
+                if next_cell is None:
+                    curr_cell = maze_path.pop()
+                else:
+                    maze_path.append(next_cell)
+                    curr_cell = next_cell
 
     def imperfect_maze(self):
         pass
