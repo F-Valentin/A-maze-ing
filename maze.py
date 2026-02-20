@@ -1,20 +1,17 @@
 import random
-from types import CellType
 
 from cellule import Cellule
 
 
-# fix y == row and x == col
-
 class Maze:
     from typing import Any
 
-    def __init__(self, config_data: dict[str, Any]):
+    def __init__(self, config_data: dict[str, Any]) -> None:
         self.config_data = config_data
         self.width = self.config_data["width"]
         self.height = self.config_data["height"]
 
-        self.maze = []
+        self.maze: list[list[Cellule]] = []
         self.init_maze(self.width, self.height)
 
     def get_random_valid_cell(self, x: int, y: int) -> Cellule | None:
@@ -24,17 +21,16 @@ class Maze:
         if not (0 <= x < width and 0 <= y < height):
             return None
 
-        print(f"current cell: {(x, y)}")
         cell = self.maze[y][x]
-        print(f"neighbors cell: {cell.neighbors}")
 
         valid_neighbors: list[tuple[int, int]] = list(
             filter(
-                lambda coords: 0 <= coords[0] < width and 0 <= coords[1] < height and not self.maze[coords[1]][coords[0]].has_visited,
+                lambda coords:
+                    0 <= coords[0] < width and 0 <= coords[1] < height
+                    and not self.maze[coords[1]][coords[0]].has_visited,
                 cell.neighbors
             )
         )
-
 
         if len(valid_neighbors) == 0:
             return None
@@ -52,13 +48,13 @@ class Maze:
 
         return next_cell
 
-    def init_maze(self, width, height) -> None:
+    def init_maze(self, width: int, height: int) -> None:
         for y in range(0, height):
             self.maze.append([])
             for x in range(0, width):
                 self.maze[y].append(Cellule(x, y, 0x0F, False))
 
-    def print_hexa_walls(self):
+    def print_hexa_walls(self) -> None:
         width = self.width
         height = self.height
         output_file = self.config_data["output_file"]
@@ -70,7 +66,7 @@ class Maze:
                     f.write(str(hex(cell.walls)).lstrip("0x").upper())
                 f.write("\n")
 
-    def print_maze_coords(self):
+    def print_maze_coords(self) -> None:
         width = self.width
         height = self.height
 
@@ -82,7 +78,7 @@ class Maze:
                 f.write("\n")
 
     @staticmethod
-    def open_walls(cell: Cellule, cell1: Cellule):
+    def open_walls(cell: Cellule, cell1: Cellule) -> None:
         north = 0b0000_0001
         south = 0b0000_0100
         east = 0b0000_0010
@@ -101,7 +97,7 @@ class Maze:
             cell.walls &= ~south
             cell1.walls &= ~north
 
-    def perfect_maze(self):
+    def perfect_maze(self) -> None:
         x = self.config_data["entry"][0]
         y = self.config_data["entry"][1]
         curr_cell = self.maze[y][x]
@@ -118,5 +114,5 @@ class Maze:
                 maze_path.append(next_cell)
                 curr_cell = next_cell
 
-    def imperfect_maze(self):
+    def imperfect_maze(self) -> None:
         pass
