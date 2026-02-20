@@ -50,31 +50,28 @@ class Solver:
             return None
 
         curr_cell = maze[y][x]
-        curr_cell.has_visited = True
 
         def is_valid_neighbor(neighbor: tuple[int, int]) -> bool:
-            x = neighbor[0]
-            y = neighbor[1]
+            n_x = neighbor[0]
+            n_y = neighbor[1]
 
-            # print(f"neighbor cell: {(x, y)}")
-
-            if not (0 <= x < width and 0 <= y < height):
+            if not (0 <= n_x < width and 0 <= n_y < height):
                 return False
 
-            cell = maze[y][x]
+            cell = maze[n_y][n_x]
 
             if cell.has_visited:
                 return False
 
             wall_open = False
 
-            if cell.walls & north:
+            if y + 1 == n_y and not cell.walls & north:
                 wall_open = True
-            elif cell.walls & south:
+            elif y - 1 == n_y and not cell.walls & south:
                 wall_open = True
-            elif cell.walls & east:
+            elif x + 1 == n_x and not cell.walls & west:
                 wall_open = True
-            elif cell.walls & west:
+            elif x - 1 == n_x and not cell.walls & east:
                 wall_open = True
 
             return wall_open
@@ -93,50 +90,55 @@ class Solver:
         for x, y in valid_neighbors:
             neighbors.append(maze[y][x])
 
-        # print(f"curr_cell neighbors: {neighbors}")
         return neighbors
 
-    def get_shortest_path(self):
+    def get_shortest_path(self) -> str:  # pas fini
+        out: str = ""
         shortest_path = self.shortest_path
 
-        pass
+        for k, v in shortest_path.items():
+            curr_cell: Cellule = v
+            next_cell: Cellule = k
+            if curr_cell.x + 1 == next_cell.x:
+                out += "E"
+            elif curr_cell.x - 1 == next_cell.x:
+                out += "W"
+            elif curr_cell.y + 1 == next_cell.y:
+                out += "S"
+            elif curr_cell.y - 1 == next_cell.y:
+                out += "N"
+        print(len(out))
+        return out
 
-    def bfs(self) -> None:  # bientot fini
-
-        shortest_path = {}
-
+    def bfs(self) -> None:
         maze = self.maze.maze
-        exit = (self.exit[0], self.exit[1])
-
-        x = self.entry[0]
-        y = self.entry[1]
-
-        curr_cell = maze[y][x]
-        curr_cell.has_visited = True
-
+        shortest_path = {}
         queue = []
 
-        while True:
+        entry = self.entry
+        entry = maze[entry[1]][entry[0]]
+        exit = self.exit
+
+        entry.has_visited = True
+        queue.append(entry)
+
+        while queue:
+            curr_cell = queue.pop(0)
+
             if (curr_cell.x, curr_cell.y) == exit:
                 break
 
-            # recup toutes les cellules voisines valides non visiter
-            queue = self.get_random_valid_cells(curr_cell.x, curr_cell.y)
-            if queue is None:
-                print("the maze is broken.")
-                return None
+            neighbors = self.get_random_valid_cells(curr_cell.x, curr_cell.y)
 
-            next_cell = queue.pop(0)  # nouvelle cellule
+            if neighbors is None:
+                continue
 
-            shortest_path[next_cell] = curr_cell  # pour
-
-            curr_cell = next_cell
+            for neighbor in neighbors:
+                if not neighbor.has_visited:
+                    neighbor.has_visited = True
+                    shortest_path[neighbor] = curr_cell
+                    queue.append(neighbor)
 
         print(len(shortest_path))
         self.shortest_path = shortest_path
-        # c = shortest_path[maze[exit[1]][exit[0]]]
-        # print(f"exit value: {c}")
-        # print(f"{(c.x, c.y)}")
-        # t = shortest_path[maze[c.y][c.x]]
-
-        # print(f"{(t.x, t.y)}")
+        print(self.get_shortest_path())
