@@ -1,7 +1,8 @@
 import sys
 
 import parsing
-from print_maze import write_binary_maze, print_maze_line
+from print_maze import read_maze_from_hex_file, print_maze_from_binary_list
+
 
 from maze import Maze
 
@@ -16,10 +17,8 @@ def main() -> None:
     maze = Maze(result)
     maze.perfect_maze()
     maze.print_hexa_walls()
-    with open("maze.txt", "r") as f, open("binary_maze.txt", "w") as out_file:
-        write_binary_maze(f, out_file)
-    with open("binary_maze.txt", "r") as out_file:
-        print_maze_line(out_file, result)
+    binary_maze = read_maze_from_hex_file("maze.txt")
+    print_maze_from_binary_list(binary_maze, result["width"], result["height"])
 
 
 if __name__ == "__main__":

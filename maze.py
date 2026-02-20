@@ -106,8 +106,6 @@ class Maze:
         while len(maze_path) > 0:
             next_cell = self.get_random_valid_cell(
                 curr_cell.x, curr_cell.y)
-            if next_cell:
-                print(f"next_cell: {(next_cell.x, next_cell.y)}")
             if next_cell is None:
                 curr_cell = maze_path.pop()
             else:
