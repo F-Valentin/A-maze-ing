@@ -21,7 +21,6 @@ def is_valid_grid(
     for key in ["entry", "exit"]:
         if key in config_data:
             x, y = config_data[key]
-            print((x, y))
             if not (0 <= x < width and 0 <= y < height):
                 print(
                     f"Error: {
