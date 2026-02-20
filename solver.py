@@ -37,7 +37,7 @@ class Solver:
                 maze = self.maze.maze
                 maze[row][col].has_visited = False
 
-    def get_random_valid_cell(self, x: int, y: int) -> Cellule | None:
+    def get_random_valid_cells(self, x: int, y: int) -> list[Cellule] | None:
         width = self.maze.width
         height = self.maze.height
         maze = self.maze.maze
@@ -50,7 +50,8 @@ class Solver:
         if not (0 <= x < width and 0 <= y < height):
             return None
 
-        cell = maze[y][x]
+        curr_cell = maze[y][x]
+        curr_cell.has_visited = True
 
         def is_valid_neighbor(neighbor: tuple[int, int]) -> bool:
             x = neighbor[0]
@@ -77,24 +78,23 @@ class Solver:
         valid_neighbors: list[tuple[int, int]] = list(
             filter(
                 lambda coords: is_valid_neighbor(coords),
-                cell.neighbors
+                curr_cell.neighbors
             )
         )
 
         if len(valid_neighbors) == 0:
             return None
 
-        neighbor_coord = random.choice(valid_neighbors)
+        neighbors: list[Cellule] = []
+        for x, y in valid_neighbors:
+            neighbors.append(maze[y][x])
 
-        x = neighbor_coord[0]
-        y = neighbor_coord[1]
+        print(f"curr_cell neighbors: {neighbors}")
+        return neighbors
 
-        next_cell = maze[y][x]
-        next_cell.has_visited = True
+    def bfs(self) -> None:  # bientot fini
 
-        return next_cell
-
-    def bfs(self) -> None:
+        shortest_path = {}
 
         maze = self.maze.maze
         exit = (self.exit[0], self.exit[1])
@@ -105,7 +105,20 @@ class Solver:
         curr_cell = maze[y][x]
         curr_cell.has_visited = True
 
-        queue = [curr_cell]
+        queue = []
 
-        while queue:
-            curr_cell = queue.pop(0)
+        while True:
+            if (curr_cell.x, curr_cell.y) == exit:
+                break
+
+            # recup toutes les cellules voisines valides non visiter
+            queue = self.get_random_valid_cells(curr_cell.x, curr_cell.y)
+            if queue is None:
+                print("the maze is broken.")
+                return None
+
+            next_cell = queue.pop(0)  # nouvelle cellule
+
+            shortest_path[next_cell] = curr_cell  # pour
+
+            curr_cell = next_cell
