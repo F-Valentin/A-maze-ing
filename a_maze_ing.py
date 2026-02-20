@@ -18,7 +18,8 @@ def main() -> None:
     maze.perfect_maze()
     maze.print_hexa_walls()
     binary_maze = read_maze_from_hex_file("maze.txt")
-    print_maze_from_binary_list(binary_maze, result["width"], result["height"])
+    print_maze_from_binary_list(binary_maze, result["width"], result["height"],
+                                result["entry"], result["exit"])
 
 
 if __name__ == "__main__":

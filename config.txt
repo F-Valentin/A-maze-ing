@@ -1,7 +1,7 @@
 # Configuration for Maze Generator
-WIDTH=6
-HEIGHT=6
-ENTRY=0,0
-EXIT=5,5
+WIDTH=20
+HEIGHT=20
+ENTRY=4,3
+EXIT=17,17
 PERFECT=true
 OUTPUT_FILE=maze.txt
