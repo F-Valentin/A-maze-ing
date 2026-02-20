@@ -56,7 +56,7 @@ class Solver:
             x = neighbor[0]
             y = neighbor[1]
 
-            print(f"neighbor cell: {(x, y)}")
+            # print(f"neighbor cell: {(x, y)}")
 
             if not (0 <= x < width and 0 <= y < height):
                 return False
@@ -93,10 +93,11 @@ class Solver:
         for x, y in valid_neighbors:
             neighbors.append(maze[y][x])
 
-        print(f"curr_cell neighbors: {neighbors}")
+        # print(f"curr_cell neighbors: {neighbors}")
         return neighbors
 
     def get_shortest_path(self):
+        shortest_path = self.shortest_path
 
         pass
 
