@@ -92,7 +92,7 @@ class Solver:
 
         return neighbors
 
-    def get_shortest_path(self) -> str:  # pas fini
+    def get_shortest_path(self) -> str:
         out: str = ""
         maze = self.maze.maze
         shortest_path = self.shortest_path
