@@ -2,6 +2,7 @@ import sys
 
 import parsing
 from maze import Maze
+from solver import Solver
 
 
 def main() -> None:
@@ -14,6 +15,8 @@ def main() -> None:
     maze = Maze(result)
     maze.perfect_maze()
     maze.print_hexa_walls()
+    solver = Solver(maze)
+    solver.bfs()
 
 
 if __name__ == "__main__":

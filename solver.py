@@ -1,17 +1,16 @@
-import random
-
-from _typeshed import WriteableBuffer
-
 from cellule import Cellule
 from maze import Maze
 
 
 class Solver:
     def __init__(self, maze: Maze) -> None:
+        self.maze = maze
+
         if not self.is_valid_maze():
             print("The maze is not valid")
             return None
-        self.maze = maze
+
+        self.shortest_path: dict[Cellule, Cellule] = {}
         self.entry = maze.config_data["entry"]
         self.exit = maze.config_data["exit"]
 
@@ -57,9 +56,14 @@ class Solver:
             x = neighbor[0]
             y = neighbor[1]
 
+            print(f"neighbor cell: {(x, y)}")
+
+            if not (0 <= x < width and 0 <= y < height):
+                return False
+
             cell = maze[y][x]
 
-            if not (0 <= x < width and 0 <= y < height) or cell.has_visited:
+            if cell.has_visited:
                 return False
 
             wall_open = False
@@ -92,6 +96,10 @@ class Solver:
         print(f"curr_cell neighbors: {neighbors}")
         return neighbors
 
+    def get_shortest_path(self):
+
+        pass
+
     def bfs(self) -> None:  # bientot fini
 
         shortest_path = {}
@@ -122,3 +130,12 @@ class Solver:
             shortest_path[next_cell] = curr_cell  # pour
 
             curr_cell = next_cell
+
+        print(len(shortest_path))
+        self.shortest_path = shortest_path
+        # c = shortest_path[maze[exit[1]][exit[0]]]
+        # print(f"exit value: {c}")
+        # print(f"{(c.x, c.y)}")
+        # t = shortest_path[maze[c.y][c.x]]
+
+        # print(f"{(t.x, t.y)}")
