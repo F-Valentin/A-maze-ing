@@ -102,6 +102,7 @@ class Solver:
 
         while (curr_cell.x, curr_cell.y) != self.entry:
             prev_cell = shortest_path[curr_cell]
+            prev_cell.has_solver_visited = "1"
             if prev_cell.x + 1 == curr_cell.x:
                 out += "E"
             if prev_cell.x - 1 == curr_cell.x:
