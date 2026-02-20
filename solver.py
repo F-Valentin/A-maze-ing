@@ -94,21 +94,25 @@ class Solver:
 
     def get_shortest_path(self) -> str:  # pas fini
         out: str = ""
+        maze = self.maze.maze
         shortest_path = self.shortest_path
 
-        for k, v in shortest_path.items():
-            curr_cell: Cellule = v
-            next_cell: Cellule = k
-            if curr_cell.x + 1 == next_cell.x:
+        exit = self.exit
+        curr_cell = maze[exit[1]][exit[0]]
+
+        while (curr_cell.x, curr_cell.y) != self.entry:
+            prev_cell = shortest_path[curr_cell]
+            if prev_cell.x + 1 == curr_cell.x:
                 out += "E"
-            elif curr_cell.x - 1 == next_cell.x:
+            if prev_cell.x - 1 == curr_cell.x:
                 out += "W"
-            elif curr_cell.y + 1 == next_cell.y:
+            elif prev_cell.y + 1 == curr_cell.y:
                 out += "S"
-            elif curr_cell.y - 1 == next_cell.y:
+            elif prev_cell.y - 1 == curr_cell.y:
                 out += "N"
-        print(len(out))
-        return out
+            curr_cell = prev_cell
+
+        return out[::-1]
 
     def bfs(self) -> None:
         maze = self.maze.maze
