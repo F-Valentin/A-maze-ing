@@ -11,7 +11,7 @@ def read_maze_from_hex_file(filename):
     return maze
 
 
-def print_maze_from_binary_list(maze, width, height, entry, exit):
+def print_maze_from_binary_list(maze, width, height, entry, exit, show_path):
     for r in range(height):
         print("+", end="")
         for c in range(width):
@@ -29,6 +29,8 @@ def print_maze_from_binary_list(maze, width, height, entry, exit):
                 print("🟢 ", end="")
             elif r == exit[1] and c == exit[0]:
                 print("🔴 ", end="")
+            elif show_path and maze[r][c][4] == "1":
+                print(" . ", end="")
             else:
                 print("   ", end="")
         if maze[r][-1][2] == "1":

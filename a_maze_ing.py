@@ -1,4 +1,5 @@
 import sys
+import os
 
 from mazegen import MazeGenerator, parsing_config_data, print_maze_from_binary_list
 
@@ -24,14 +25,40 @@ def main() -> None:
     print(f"Shortest path length: {len(solution)}")
     print(f"Path: {solution}")
 
-    binary_format = maze_gen.get_binary_maze()
-    print_maze_from_binary_list(
-        binary_format,
-        config["width"],
-        config["height"],
-        config["entry"],
-        config["exit"],
-    )
+    def clear_screen():
+        os.system("cls" if os.name == "nt" else "clear")
+
+    show_path = True
+    while True:
+        clear_screen()
+
+        binary_format = maze_gen.get_binary_maze()
+        print_maze_from_binary_list(
+            binary_format,
+            config["width"],
+            config["height"],
+            config["entry"],
+            config["exit"],
+            show_path
+        )
+
+        print("\n[S] Toggle path  |  [R] Regenerate  |  [Q] Quit")
+        choice = input("Choice: ").lower()
+
+        if choice == "s":
+            show_path = not show_path
+
+        elif choice == "r":
+            maze_gen = MazeGenerator(
+                width=config["width"],
+                height=config["height"]
+            )
+            maze_gen.generate(entry=config["entry"])
+            maze_gen.solve(entry=config["entry"], exit_coords=config["exit"])
+            show_path = False
+
+        elif choice == "q":
+            break
 
 
 if __name__ == "__main__":

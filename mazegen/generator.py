@@ -73,12 +73,14 @@ class MazeGenerator:
                 f.write("\n")
 
     def get_binary_maze(self) -> list[list[str]]:
-        """Adapter: Converts the cell grid to the binary string format needed by print_maze."""
         binary_maze = []
         for y in range(self.height):
             row = []
             for x in range(self.width):
-                row.append(format(self.maze[y][x].walls, "04b"))
+                cell = self.maze[y][x]
+                walls_bits = format(cell.walls, "04b")
+                solver_bit = "1" if cell.has_solver_visited == "1" else "0"
+                row.append(walls_bits + solver_bit)
             binary_maze.append(row)
         return binary_maze
 
