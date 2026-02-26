@@ -22,11 +22,7 @@ def is_valid_grid(
         if key in config_data:
             x, y = config_data[key]
             if not (0 <= x < width and 0 <= y < height):
-                print(
-                    f"Error: {
-                        key.upper()} {
-                        x,
-                        y} is out of maze boundaries.")
+                print(f"Error: {key.upper()} {x, y} is out of maze boundaries.")
                 return False
     return True
 
