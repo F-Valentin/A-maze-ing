@@ -1,6 +1,6 @@
 import sys
 
-from mazegen import MazeGenerator, parsing_config_data, print_maze_from_binary_list
+from mazegen import MazeGenerator, parsing_config_data
 
 
 def main() -> None:
@@ -12,26 +12,33 @@ def main() -> None:
     if not config:
         return
 
-    maze_gen = MazeGenerator(width=config["width"], height=config["height"])
+    maze_gen = MazeGenerator(
+        width=config["width"],
+        height=config["height"],
+        seed=1234)
 
     maze_gen.generate(entry=config["entry"])
-    if not maze_gen.is_valid_maze():
-        print("Error: The generated maze is invalid (contains isolated cells).")
-        sys.exit(-1)
-    maze_gen.save_to_hex_file(config["output_file"])
+    # maze_gen.print_maze(config)
 
-    solution = maze_gen.solve(entry=config["entry"], exit_coords=config["exit"])
-    print(f"Shortest path length: {len(solution)}")
-    print(f"Path: {solution}")
+    while (1):
+        print("r to re-generate the maze.")
+        print("s to show or hide the path to the exit (hide by default).")
+        print("c to change the maze's color.")
+        print("q to quit the program.")
+        opt = input()
+        print(opt)
+        if (opt == "r"):
+            maze_gen.re_generate(entry=config["entry"])
+            # maze_gen.print_maze(config)
 
-    binary_format = maze_gen.get_binary_maze()
-    print_maze_from_binary_list(
-        binary_format,
-        config["width"],
-        config["height"],
-        config["entry"],
-        config["exit"],
-    )
+        elif (opt == "s"):
+            maze_gen.show_path(entry=config["entry"])
+        elif (opt == "c"):
+            pass
+        elif (opt == "q"):
+            break
+        else:
+            print("You have passed a wrong option.")
 
 
 if __name__ == "__main__":

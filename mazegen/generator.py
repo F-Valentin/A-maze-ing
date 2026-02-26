@@ -1,11 +1,13 @@
 import random
 from typing import Any, Optional
 
+# from print_maze import print_maze_from_binary_list
 from .cellule import Cellule
 
 
 class MazeGenerator:
-    def __init__(self, width: int, height: int, seed: Optional[Any] = None) -> None:
+    def __init__(self, width: int, height: int,
+                 seed: Optional[Any] = None) -> None:
         self.width = width
         self.height = height
         if seed is not None:
@@ -13,6 +15,7 @@ class MazeGenerator:
 
         self.maze: list[list[Cellule]] = []
         self.shortest_path: dict[Cellule, Cellule] = {}
+        self.is_path_visible: bool = False
         self._init_maze()
 
     def _init_maze(self) -> None:
@@ -30,14 +33,23 @@ class MazeGenerator:
         maze_path = [curr_cell]
 
         while len(maze_path) > 0:
-            next_cell = self._get_random_unvisited_neighbor(curr_cell.x, curr_cell.y)
+            next_cell = self._get_random_unvisited_neighbor(
+                curr_cell.x, curr_cell.y)
             if next_cell is None:
                 curr_cell = maze_path.pop()
             else:
                 maze_path.append(next_cell)
                 curr_cell = next_cell
 
-    def solve(self, entry: tuple[int, int], exit_coords: tuple[int, int]) -> str:
+    def re_generate(self, entry: tuple[int, int]):
+        """Re-generates a perfect maze using a randomized depth-first search."""
+        self._reset_visited()
+        self._reset_cell_walls()
+        random.seed(a=None)
+        self.generate(entry)
+
+    def solve(self, entry: tuple[int, int],
+              exit_coords: tuple[int, int]) -> str:
         """Solves the maze using BFS and returns the shortest path string."""
         self._reset_visited()
         queue: list[Cellule] = []
@@ -51,7 +63,8 @@ class MazeGenerator:
             if (curr_cell.x, curr_cell.y) == exit_coords:
                 break
 
-            neighbors = self._get_valid_path_neighbors(curr_cell.x, curr_cell.y)
+            neighbors = self._get_valid_path_neighbors(
+                curr_cell.x, curr_cell.y)
             if neighbors is None:
                 continue
 
@@ -84,7 +97,8 @@ class MazeGenerator:
 
     # --- Internal Helpers ---
 
-    def _get_random_unvisited_neighbor(self, x: int, y: int) -> Optional[Cellule]:
+    def _get_random_unvisited_neighbor(
+            self, x: int, y: int) -> Optional[Cellule]:
         cell = self.maze[y][x]
         valid_neighbors = list(
             filter(
@@ -125,6 +139,11 @@ class MazeGenerator:
             for col in range(self.width):
                 self.maze[row][col].has_visited = False
 
+    def _reset_cell_walls(self) -> None:
+        for row in range(self.height):
+            for col in range(self.width):
+                self.maze[row][col].walls = 0x0F
+
     def is_valid_maze(self) -> bool:
         """
         Checks if the maze is fully connected (no isolated cells).
@@ -136,7 +155,8 @@ class MazeGenerator:
                     return False
         return True
 
-    def _get_valid_path_neighbors(self, x: int, y: int) -> Optional[list[Cellule]]:
+    def _get_valid_path_neighbors(
+            self, x: int, y: int) -> Optional[list[Cellule]]:
         north, south, east, west = 0b0001, 0b0100, 0b0010, 0b1000
         cell = self.maze[y][x]
 
@@ -180,3 +200,31 @@ class MazeGenerator:
                 out += "N"
             curr_cell = prev_cell
         return out[::-1]
+
+    def show_path(self, entry: tuple[int, int]) -> None:
+        self.is_path_visible = not self.is_path_visible
+        if self.is_path_visible is False:
+            self.generate(entry)
+            return
+        # TODO add show path logic
+
+    # def print_maze(self, config: dict[str, Any]) -> None:
+    #     if not self.is_valid_maze():
+    #         print("Error: The generated maze is invalid (contains isolated cells).")
+    #         return
+    #     self.save_to_hex_file(config["output_file"])
+
+    #     solution = self.solve(
+    #         entry=config["entry"],
+    #         exit_coords=config["exit"])
+    #     print(f"Shortest path length: {len(solution)}")
+    #     print(f"Path: {solution}")
+
+    #     binary_format = self.get_binary_maze()
+    #     print_maze_from_binary_list(
+    #         binary_format,
+    #         config["width"],
+    #         config["height"],
+    #         config["entry"],
+    #         config["exit"],
+    #     )
