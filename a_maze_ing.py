@@ -1,7 +1,17 @@
 import sys
 import os
 
-from mazegen import MazeGenerator, parsing_config_data, print_maze_from_binary_list
+from mazegen import MazeGenerator, parsing_config_data
+from mazegen import print_maze_from_binary_list
+
+COLORS = [
+    "\033[37m",  # white
+    "\033[32m",  # green
+    "\033[34m",  # blue
+    "\033[33m",  # yellow
+    "\033[35m",  # magenta
+    "\033[36m",  # cyan
+]
 
 
 def main() -> None:
@@ -17,11 +27,12 @@ def main() -> None:
 
     maze_gen.generate(entry=config["entry"])
     if not maze_gen.is_valid_maze():
-        print("Error: The generated maze is invalid (contains isolated cells).")
+        print("Error: The generated maze is invalid (contains isolated cells)")
         sys.exit(-1)
     maze_gen.save_to_hex_file(config["output_file"])
 
-    solution = maze_gen.solve(entry=config["entry"], exit_coords=config["exit"])
+    solution = maze_gen.solve(entry=config["entry"],
+                              exit_coords=config["exit"])
     print(f"Shortest path length: {len(solution)}")
     print(f"Path: {solution}")
 
@@ -29,6 +40,8 @@ def main() -> None:
         os.system("cls" if os.name == "nt" else "clear")
 
     show_path = True
+    color_index = 0
+    wall_color = COLORS[color_index]
     while True:
         clear_screen()
 
@@ -39,10 +52,11 @@ def main() -> None:
             config["height"],
             config["entry"],
             config["exit"],
-            show_path
+            show_path,
+            wall_color
         )
 
-        print("\n[S] Toggle path  |  [R] Regenerate  |  [Q] Quit")
+        print("\n[S] Toggle path  |  [R] Regenerate  | [C] Color  |  [Q] Quit")
         choice = input("Choice: ").lower()
 
         if choice == "s":
@@ -55,7 +69,10 @@ def main() -> None:
             )
             maze_gen.generate(entry=config["entry"])
             maze_gen.solve(entry=config["entry"], exit_coords=config["exit"])
-            show_path = False
+            show_path = True
+        elif choice == "c":
+            color_index = (color_index + 1) % len(COLORS)
+            wall_color = COLORS[color_index]
 
         elif choice == "q":
             break
