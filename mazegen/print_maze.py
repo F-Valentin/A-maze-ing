@@ -32,7 +32,7 @@ def print_maze_from_binary_list(maze, width, height, entry, exit, show_path,
                 print("🔴 ", end="")
             elif show_path and maze[r][c][4] == "1":
                 print(" \033[31m. ", end="")
-            elif show_path and maze[r][c][5] == "1":
+            elif maze[r][c][5] == "1":
                 print(f" {wall_color}█ ", end="")
             else:
                 print("   ", end="")
