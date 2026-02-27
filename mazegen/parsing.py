@@ -123,3 +123,5 @@ def parsing_config_data(file_name: str) -> dict[str, Any] | None:
         return None
 
     return config_data
+
+

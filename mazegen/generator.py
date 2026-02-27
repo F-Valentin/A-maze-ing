@@ -1,11 +1,13 @@
 import random
+import sys
 from typing import Any, Optional
 
 from .cellule import Cellule
 
 
 class MazeGenerator:
-    def __init__(self, width: int, height: int, seed: Optional[Any] = None) -> None:
+    def __init__(self, width: int, height: int,
+                 seed: Optional[Any] = None) -> None:
         self.width = width
         self.height = height
         if seed is not None:
@@ -20,7 +22,7 @@ class MazeGenerator:
         for y in range(self.height):
             self.maze.append([])
             for x in range(self.width):
-                self.maze[y].append(Cellule(x, y, 0x0F, False))
+                self.maze[y].append(Cellule(x, y, 0x0F, False, False))
 
     def generate(self, entry: tuple[int, int]) -> None:
         """Generates a perfect maze using a randomized depth-first search."""
@@ -30,14 +32,16 @@ class MazeGenerator:
         maze_path = [curr_cell]
 
         while len(maze_path) > 0:
-            next_cell = self._get_random_unvisited_neighbor(curr_cell.x, curr_cell.y)
+            next_cell = self._get_random_unvisited_neighbor(curr_cell.x,
+                                                            curr_cell.y)
             if next_cell is None:
                 curr_cell = maze_path.pop()
             else:
                 maze_path.append(next_cell)
                 curr_cell = next_cell
 
-    def solve(self, entry: tuple[int, int], exit_coords: tuple[int, int]) -> str:
+    def solve(self, entry: tuple[int, int],
+              exit_coords: tuple[int, int]) -> str:
         """Solves the maze using BFS and returns the shortest path string."""
         self._reset_visited()
         queue: list[Cellule] = []
@@ -51,7 +55,8 @@ class MazeGenerator:
             if (curr_cell.x, curr_cell.y) == exit_coords:
                 break
 
-            neighbors = self._get_valid_path_neighbors(curr_cell.x, curr_cell.y)
+            neighbors = self._get_valid_path_neighbors(curr_cell.x,
+                                                       curr_cell.y)
             if neighbors is None:
                 continue
 
@@ -80,13 +85,15 @@ class MazeGenerator:
                 cell = self.maze[y][x]
                 walls_bits = format(cell.walls, "04b")
                 solver_bit = "1" if cell.has_solver_visited == "1" else "0"
-                row.append(walls_bits + solver_bit)
+                forty_bit = "1" if cell.forty_patherne else "0"
+                row.append(walls_bits + solver_bit + forty_bit)
             binary_maze.append(row)
         return binary_maze
 
     # --- Internal Helpers ---
 
-    def _get_random_unvisited_neighbor(self, x: int, y: int) -> Optional[Cellule]:
+    def _get_random_unvisited_neighbor(self, x: int,
+                                       y: int) -> Optional[Cellule]:
         cell = self.maze[y][x]
         valid_neighbors = list(
             filter(
@@ -138,7 +145,8 @@ class MazeGenerator:
                     return False
         return True
 
-    def _get_valid_path_neighbors(self, x: int, y: int) -> Optional[list[Cellule]]:
+    def _get_valid_path_neighbors(self, x: int,
+                                  y: int) -> Optional[list[Cellule]]:
         north, south, east, west = 0b0001, 0b0100, 0b0010, 0b1000
         cell = self.maze[y][x]
 
@@ -182,3 +190,36 @@ class MazeGenerator:
                 out += "N"
             curr_cell = prev_cell
         return out[::-1]
+
+    def feel_forty_two(self, entry, exit) -> None:
+        center_x = self.width // 2
+        center_y = self.height // 2
+
+        four_coords = [
+            (center_x - 3, center_y - 1),
+            (center_x - 3, center_y),
+            (center_x - 3, center_y + 1),
+            (center_x - 2, center_y + 1),
+            (center_x - 1, center_y),
+            (center_x - 1, center_y + 1),
+            (center_x - 1, center_y + 2)
+        ]
+        two_coords = [
+            (center_x + 1, center_y - 1),
+            (center_x + 2, center_y - 1),
+            (center_x + 3, center_y - 1),
+            (center_x + 3, center_y),
+            (center_x + 2, center_y + 1),
+            (center_x + 1, center_y + 1),
+            (center_x + 1, center_y + 2),
+            (center_x + 2, center_y + 2),
+            (center_x + 3, center_y + 2),
+        ]
+        pattern_coords = four_coords + two_coords
+        if entry in pattern_coords or exit in pattern_coords:
+            print("Error: Entry or exit overlaps with the '42' pattern.")
+            sys.exit(1)
+
+        for x, y in four_coords + two_coords:
+            self.maze[y][x].forty_patherne = True
+            self.maze[y][x].has_visited = True

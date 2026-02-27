@@ -24,7 +24,9 @@ def main() -> None:
         return
 
     maze_gen = MazeGenerator(width=config["width"], height=config["height"])
-
+    if config["42"]:
+        maze_gen.feel_forty_two(entry=config["entry"],
+                                exit=config["exit"])
     maze_gen.generate(entry=config["entry"])
     if not maze_gen.is_valid_maze():
         print("Error: The generated maze is invalid (contains isolated cells)")
@@ -67,6 +69,9 @@ def main() -> None:
                 width=config["width"],
                 height=config["height"]
             )
+            if config["42"]:
+                maze_gen.feel_forty_two(entry=config["entry"],
+                                        exit=config["exit"])
             maze_gen.generate(entry=config["entry"])
             maze_gen.solve(entry=config["entry"], exit_coords=config["exit"])
             show_path = True
