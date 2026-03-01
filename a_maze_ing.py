@@ -27,10 +27,12 @@ def main() -> None:
     if config["42"]:
         maze_gen.feel_forty_two(entry=config["entry"],
                                 exit=config["exit"])
-    maze_gen.generate(entry=config["entry"])
+    maze_gen.generate_perfect_maze(entry=config["entry"])
     if not maze_gen.is_valid_maze():
         print("Error: The generated maze is invalid (contains isolated cells)")
         sys.exit(-1)
+    if not config["perfect"]:
+        maze_gen.make_imperfect_maze_simple()
     maze_gen.save_to_hex_file(config["output_file"])
 
     solution = maze_gen.solve(entry=config["entry"],
@@ -72,7 +74,9 @@ def main() -> None:
             if config["42"]:
                 maze_gen.feel_forty_two(entry=config["entry"],
                                         exit=config["exit"])
-            maze_gen.generate(entry=config["entry"])
+            maze_gen.generate_perfect_maze(entry=config["entry"])
+            if not config["perfect"]:
+                maze_gen.make_imperfect_maze_simple()
             maze_gen.solve(entry=config["entry"], exit_coords=config["exit"])
             show_path = True
         elif choice == "c":

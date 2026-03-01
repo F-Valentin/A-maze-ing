@@ -24,7 +24,7 @@ class MazeGenerator:
             for x in range(self.width):
                 self.maze[y].append(Cellule(x, y, 0x0F, False, False))
 
-    def generate(self, entry: tuple[int, int]) -> None:
+    def generate_perfect_maze(self, entry: tuple[int, int]) -> None:
         """Generates a perfect maze using a randomized depth-first search."""
         x, y = entry
         curr_cell = self.maze[y][x]
@@ -39,6 +39,37 @@ class MazeGenerator:
             else:
                 maze_path.append(next_cell)
                 curr_cell = next_cell
+
+    def make_imperfect_maze_simple(self) -> None:
+        attempts = 0
+        openings = (self.width + self.height) // 2
+        max_attempts = openings * 10
+        while openings > 0 and attempts < max_attempts:
+            attempts += 1
+            x = random.randint(1, self.width - 2)
+            y = random.randint(1, self.height - 2)
+            cell = self.maze[y][x]
+            if cell.forty_patherne:
+                continue
+            closed_walls_cell = bin(cell.walls).count("1")
+            if closed_walls_cell < 2:
+                continue
+            neighbors = []
+            for n_x, n_y in cell.neighbors:
+                if not (1 <= n_x < self.width - 1 and 1 <= n_y < self.height - 1):
+                    continue
+                neighbor = self.maze[n_y][n_x]
+                if neighbor.forty_patherne:
+                    continue
+                closed_walls_neighbor = bin(neighbor.walls).count("1")
+                if closed_walls_neighbor < 2:
+                    continue
+                neighbors.append(neighbor)
+            if not neighbors:
+                continue
+            neighbor = random.choice(neighbors)
+            self._open_walls(cell, neighbor)
+            openings -= 1
 
     def solve(self, entry: tuple[int, int],
               exit_coords: tuple[int, int]) -> str:
