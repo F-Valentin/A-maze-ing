@@ -56,7 +56,8 @@ class MazeGenerator:
                 continue
             neighbors = []
             for n_x, n_y in cell.neighbors:
-                if not (1 <= n_x < self.width - 1 and 1 <= n_y < self.height - 1):
+                if not (1 <= n_x < self.width - 1
+                        and 1 <= n_y < self.height - 1):
                     continue
                 neighbor = self.maze[n_y][n_x]
                 if neighbor.forty_patherne:
@@ -222,7 +223,9 @@ class MazeGenerator:
             curr_cell = prev_cell
         return out[::-1]
 
-    def feel_forty_two(self, entry, exit) -> None:
+    def feel_forty_two(
+        self, entry: tuple[int, int], exit: tuple[int, int]
+    ) -> None:
         center_x = self.width // 2
         center_y = self.height // 2
 

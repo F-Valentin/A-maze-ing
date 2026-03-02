@@ -1,4 +1,4 @@
-def read_maze_from_hex_file(filename):
+def read_maze_from_hex_file(filename: str) -> list[list[str]]:
     maze = []
     with open(filename, "r") as f:
         lines = [line.strip() for line in f.readlines()]
@@ -11,8 +11,10 @@ def read_maze_from_hex_file(filename):
     return maze
 
 
-def print_maze_from_binary_list(maze, width, height, entry, exit, show_path,
-                                wall_color):
+def print_maze_from_binary_list(maze: list[list[str]], width: int,
+                                height: int, entry: tuple[int, int],
+                                exit: tuple[int, int], show_path: bool,
+                                wall_color: str) -> None:
     for r in range(height):
         print(f"{wall_color}+", end="")
         for c in range(width):

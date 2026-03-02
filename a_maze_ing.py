@@ -40,7 +40,7 @@ def main() -> None:
     print(f"Shortest path length: {len(solution)}")
     print(f"Path: {solution}")
 
-    def clear_screen():
+    def clear_screen() -> None:
         os.system("cls" if os.name == "nt" else "clear")
 
     show_path = True
