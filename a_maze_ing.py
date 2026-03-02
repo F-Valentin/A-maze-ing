@@ -33,10 +33,11 @@ def main() -> None:
         sys.exit(-1)
     if not config["perfect"]:
         maze_gen.make_imperfect_maze_simple()
-    maze_gen.save_to_hex_file(config["output_file"])
 
     solution = maze_gen.solve(entry=config["entry"],
                               exit_coords=config["exit"])
+    maze_gen.save_to_hex_file(
+        config["output_file"], config["entry"], config["exit"])
     print(f"Shortest path length: {len(solution)}")
     print(f"Path: {solution}")
 
@@ -47,7 +48,7 @@ def main() -> None:
     color_index = 0
     wall_color = COLORS[color_index]
     while True:
-        clear_screen()
+        # clear_screen()
 
         binary_format = maze_gen.get_binary_maze()
         print_maze_from_binary_list(
@@ -78,6 +79,8 @@ def main() -> None:
             if not config["perfect"]:
                 maze_gen.make_imperfect_maze_simple()
             maze_gen.solve(entry=config["entry"], exit_coords=config["exit"])
+            maze_gen.save_to_hex_file(
+                config["output_file"], config["entry"], config["exit"])
             show_path = True
         elif choice == "c":
             color_index = (color_index + 1) % len(COLORS)

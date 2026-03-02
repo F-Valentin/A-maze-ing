@@ -7,7 +7,7 @@ from .cellule import Cellule
 
 class MazeGenerator:
     def __init__(self, width: int, height: int,
-                 seed: Optional[Any] = None) -> None:
+                 seed: Optional[int] = None) -> None:
         self.width = width
         self.height = height
         if seed is not None:
@@ -100,7 +100,10 @@ class MazeGenerator:
 
         return self._build_path_string(entry, exit_coords)
 
-    def save_to_hex_file(self, filename: str) -> None:
+    def save_to_hex_file(
+        self, filename: str, entry: tuple[int, int],
+        exit_coords: tuple[int, int]
+    ) -> None:
         """Saves the maze to a file in hexadecimal format."""
         with open(filename, "w") as f:
             for row in range(self.height):
@@ -108,6 +111,10 @@ class MazeGenerator:
                     cell = self.maze[row][col]
                     f.write(str(hex(cell.walls)).lstrip("0x").upper())
                 f.write("\n")
+            f.write("\n")
+            f.write(f"{entry}\n")
+            f.write(f"{exit_coords}\n")
+            f.write(f"{self._build_path_string(entry, exit_coords)}")
 
     def get_binary_maze(self) -> list[list[str]]:
         binary_maze = []
@@ -121,8 +128,6 @@ class MazeGenerator:
                 row.append(walls_bits + solver_bit + forty_bit)
             binary_maze.append(row)
         return binary_maze
-
-    # --- Internal Helpers ---
 
     def _get_random_unvisited_neighbor(self, x: int,
                                        y: int) -> Optional[Cellule]:
