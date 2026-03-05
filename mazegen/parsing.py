@@ -4,6 +4,7 @@ from typing import Any
 def is_valid_grid(
     width: int | None, height: int | None, config_data: dict[str, Any]
 ) -> bool:
+    """check if the grid is valid"""
     if width is None or height is None:
         print("Error: WIDTH and HEIGHT must be defined in config.txt")
         return False
@@ -30,6 +31,7 @@ is out of maze boundaries.")
 
 def assign_key_value(key: str, value: str,
                      config_data: dict[str, Any]) -> bool:
+    """assign key value"""
     try:
         match key:
             case "WIDTH":
@@ -66,6 +68,7 @@ def assign_key_value(key: str, value: str,
 
 
 def is_all_keys_required(config_data: dict[str, Any]) -> bool:
+    """check if all keys are require"""
     required_keys = [
         "width",
         "height",

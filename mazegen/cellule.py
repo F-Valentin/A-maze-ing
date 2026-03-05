@@ -1,4 +1,5 @@
 class Cellule:
+    """Cellule class used to create better coordinate system."""
     def __init__(self, x: int, y: int, walls: int,
                  has_visited: bool, forty_patherne: bool):
         self.x = x

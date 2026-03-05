@@ -6,6 +6,7 @@ from .cellule import Cellule
 
 
 class MazeGenerator:
+    """Create a maze generator."""
     def __init__(self, width: int, height: int,
                  seed: Optional[int] = None) -> None:
         self.width = width
@@ -41,6 +42,7 @@ class MazeGenerator:
                 curr_cell = next_cell
 
     def make_imperfect_maze_simple(self) -> None:
+        """Generates a imperfect maze using a randomized depth-first search."""
         attempts = 0
         openings = (self.width + self.height) // 2
         max_attempts = openings * 10
@@ -117,6 +119,7 @@ class MazeGenerator:
             f.write(f"{self._build_path_string(entry, exit_coords)}")
 
     def get_binary_maze(self) -> list[list[str]]:
+        """Convert hex to binary"""
         binary_maze = []
         for y in range(self.height):
             row = []
@@ -131,6 +134,7 @@ class MazeGenerator:
 
     def _get_random_unvisited_neighbor(self, x: int,
                                        y: int) -> Optional[Cellule]:
+        """Use to check unvisited neighbor"""
         cell = self.maze[y][x]
         valid_neighbors = list(
             filter(
@@ -152,6 +156,7 @@ class MazeGenerator:
         return next_cell
 
     def _open_walls(self, cell1: Cellule, cell2: Cellule) -> None:
+        """Used to open wall in two cellules"""
         north, south, east, west = 0b0001, 0b0100, 0b0010, 0b1000
         if cell1.x + 1 == cell2.x:
             cell1.walls &= ~east
@@ -167,6 +172,7 @@ class MazeGenerator:
             cell2.walls &= ~north
 
     def _reset_visited(self) -> None:
+        """reset visited cell"""
         for row in range(self.height):
             for col in range(self.width):
                 self.maze[row][col].has_visited = False
@@ -184,6 +190,7 @@ class MazeGenerator:
 
     def _get_valid_path_neighbors(self, x: int,
                                   y: int) -> Optional[list[Cellule]]:
+        """get valid path neighbor"""
         north, south, east, west = 0b0001, 0b0100, 0b0010, 0b1000
         cell = self.maze[y][x]
 
@@ -210,6 +217,7 @@ class MazeGenerator:
     def _build_path_string(
         self, entry: tuple[int, int], exit_coords: tuple[int, int]
     ) -> str:
+        """get path to the exit"""
         out = ""
         curr_cell = self.maze[exit_coords[1]][exit_coords[0]]
         while (curr_cell.x, curr_cell.y) != entry:
@@ -231,6 +239,7 @@ class MazeGenerator:
     def feel_forty_two(
         self, entry: tuple[int, int], exit: tuple[int, int]
     ) -> None:
+        """feel forty tow"""
         center_x = self.width // 2
         center_y = self.height // 2
 
