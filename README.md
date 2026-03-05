@@ -83,7 +83,7 @@ The core maze logic has been decoupled into a standalone, pip-installable module
 * **Roles:**
 * **vafechte:** Focused on the core maze generation algorithm (_get_random_unvisited_neighbor, init_maze, open_walls, save_to_hex_file),
 the BFS solver logic, the parsing file and structuring the `mazegen` Python package architecture.
-* **matdos-s:** Focused on the visual representation and on the dfs algorith,  specifically designing the terminal display logic (`print_maze.py`) and bitwise wall rendering.
+* **matdos-s:** Focused on the visual representation and on the dfs algorith(perfect and imperfect maze),  specifically designing the terminal display logic (`print_maze.py`) and bitwise wall rendering.
 * **Anticipated Planning vs. Reality:** We initially planned to build the entire script in one file and separate it later. However, we realized that merging different data structures (objects vs. binary strings) at the end was tricky. We adapted by using the Adapter design pattern (`get_binary_maze()`) to safely connect the generator to the display logic without rewriting each other's code.
 * **What worked well:** Dividing the logic (Generation vs. Display) allowed us to work in parallel without merge conflicts.
 * **What could be improved:** We could have agreed on a strict internal data structure on day one to avoid needing an adapter later.
